@@ -57,9 +57,8 @@ class FireStore {
         Title3: data.Title3);
 
     await docData.set(result.toJSON());
-    final docDomain = FirebaseFirestore.instance
-        .collection('TopWebsite')
-        .doc("android games");
+    final docDomain =
+        FirebaseFirestore.instance.collection('TopWebsite').doc(data.Search);
     await docDomain.set({'Domain': data.Domain1});
   }
 }
