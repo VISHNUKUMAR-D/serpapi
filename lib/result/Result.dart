@@ -67,7 +67,7 @@ class _ResultState extends State<Result> {
                       child: Text(data.Search.toUpperCase(),
                           style: GoogleFonts.lexend(
                               textStyle: TextStyle(
-                            fontSize: 17.5,
+                            fontSize: 15,
                             color: Colors.greenAccent.shade700,
                           ))),
                     ),
@@ -87,7 +87,7 @@ class _ResultState extends State<Result> {
                       child: Text("DOMAINS",
                           style: GoogleFonts.lexend(
                               textStyle: TextStyle(
-                            fontSize: 17.5,
+                            fontSize: 15,
                             color: Colors.greenAccent.shade700,
                           ))),
                     ),
@@ -121,6 +121,7 @@ class _ResultState extends State<Result> {
         Text(data,
             style: GoogleFonts.lexend(
                 textStyle: const TextStyle(
+              fontSize: 12.5,
               decoration: TextDecoration.underline,
               color: Colors.blue,
             ))),
