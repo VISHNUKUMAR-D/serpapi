@@ -51,38 +51,48 @@ class _RecordsState extends State<Records> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Center(
-                child: Text(data.Search,
+                child: Text(data.Search.toUpperCase(),
                     style: GoogleFonts.lexend(
                         textStyle: TextStyle(
                       fontSize: 15,
                       color: Colors.greenAccent.shade700,
                     ))),
               ),
-              Text(" 1  " + data.Title1,
-                  style: GoogleFonts.lexend(
-                      textStyle: const TextStyle(
-                    decoration: TextDecoration.underline,
-                    color: Colors.blue,
-                  ))),
-              Text(" 2  " + data.Title2,
-                  style: GoogleFonts.lexend(
-                      textStyle: const TextStyle(
-                    decoration: TextDecoration.underline,
-                    color: Colors.blue,
-                  ))),
+              buildRow("1", data.Title1),
+              buildRow("2", data.Title2),
               Padding(
                 padding: const EdgeInsets.only(bottom: 30.0),
-                child: Text(" 3  " + data.Title3,
-                    style: GoogleFonts.lexend(
-                        textStyle: const TextStyle(
-                      decoration: TextDecoration.underline,
-                      color: Colors.blue,
-                    ))),
+                child: buildRow("3", data.Title3),
               )
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Row buildRow(String position, String data) {
+    return Row(
+      children: [
+        const SizedBox(
+          width: 10,
+        ),
+        Text(position,
+            style: GoogleFonts.lexend(
+                textStyle: const TextStyle(
+              color: Colors.blue,
+            ))),
+        const SizedBox(
+          width: 20,
+        ),
+        Text(data,
+            style: GoogleFonts.lexend(
+                textStyle: const TextStyle(
+              fontSize: 12.5,
+              decoration: TextDecoration.underline,
+              color: Colors.blue,
+            ))),
+      ],
     );
   }
 
