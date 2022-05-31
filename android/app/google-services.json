@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "27266381461",
+    "project_id": "serpapi-d0000",
+    "storage_bucket": "serpapi-d0000.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:27266381461:android:0b317bf03bca5dde858d9c",
+        "android_client_info": {
+          "package_name": "com.example.serpapi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "27266381461-9igehs0k5686uilbk45lsqopu8nv2c2g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXeSnN1M08mjptgYnCxSsHc2m4bSAvsaM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "27266381461-9igehs0k5686uilbk45lsqopu8nv2c2g.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

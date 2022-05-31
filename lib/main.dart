@@ -1,18 +1,24 @@
-import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:http/http.dart' as http;
+import 'package:serpapi/records/Records.dart';
+import 'package:serpapi/result/Result.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_config/flutter_config.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'apiCall/Api.dart';
+import 'chart/Chart.dart';
 
-void main() {
+Future main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  await FlutterConfig.loadEnvVariables();
+
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
@@ -22,12 +28,6 @@ class MyApp extends StatelessWidget {
   }
 }
 
-Map responseMessageIN = {};
-Map responseMessageAU = {};
-Map responseMessageUS = {};
-Map responseMessageUK = {};
-Map responseMessageJP = {};
-
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
   @override
@@ -36,42 +36,11 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   TextEditingController textEditingController = TextEditingController();
-  Future apiCall(searchString, String country, int index) async {
-    try {
-      http.Response response;
-      response = await http.get(Uri.parse("https://serpapi.com/search.json?q=" +
-          searchString +
-          "&google_domain=google.com&gl=" +
-          country +
-          "&hl=en&api_key=66adceb66d98ef0c70f4c8fb24cc9a5e6bac675ac63b9a650cfbab29fb362e10"));
-      if (response.statusCode == 200) {
-        setState(() {
-          switch (country) {
-            case "in":
-              responseMessageIN = json.decode(response.body);
-              break;
-            case "au":
-              responseMessageAU = json.decode(response.body);
-              break;
-            case "us":
-              responseMessageUS = json.decode(response.body);
-              break;
-            case "uk":
-              responseMessageUK = json.decode(response.body);
-              break;
-            case "jp":
-              responseMessageJP = json.decode(response.body);
-              break;
-          }
-        });
-      }
-    } catch (err) {
-      print(err);
-    }
-  }
 
+  int currentIndex = 0;
   @override
   Widget build(BuildContext context) {
+    final Tabs = [Search(), Result(), Chart(), Records()];
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.lightBlueAccent,
@@ -81,52 +50,94 @@ class _MyHomePageState extends State<MyHomePage> {
           style: GoogleFonts.lexend(fontWeight: FontWeight.bold),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            Padding(
-              padding: EdgeInsets.all(10.0),
-              child: Card(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
-                child: TextField(
-                    controller: textEditingController,
-                    onSubmitted: (value) {
-                      String searchValue = value;
-                      searchValue = searchValue.replaceAll(" ", "+");
-                      apiCall(searchValue, "in", 0);
-                      apiCall(searchValue, "au", 1);
-                      apiCall(searchValue, "us", 2);
-                      apiCall(searchValue, "uk", 3);
-                      apiCall(searchValue, "jp", 4);
-                    },
-                    decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        contentPadding: EdgeInsets.only(left: 75),
-                        suffixIcon: Icon(Icons.search_outlined),
-                        hintText: " Enter your search ...")),
-              ),
-            ),
-            Container(
-              child: Column(
-                children: [
-                  if (!responseMessageIN.isEmpty) resultContainer("India", 0),
-                  if (!responseMessageAU.isEmpty)
-                    resultContainer("Australia", 1),
-                  if (!responseMessageUS.isEmpty) resultContainer("US", 2),
-                  if (!responseMessageUK.isEmpty) resultContainer("UK", 3),
-                  if (!responseMessageJP.isEmpty) resultContainer("Japan", 4),
-                ],
-              ),
-            ),
-          ],
-        ),
+      body: Tabs[currentIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: currentIndex,
+        onTap: (value) => setState(() {
+          currentIndex = (value);
+        }),
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search),
+            label: "Search",
+            backgroundColor: Colors.lightBlueAccent,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.pageview),
+            label: "Result",
+            backgroundColor: Colors.lightBlueAccent,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.bar_chart),
+            label: "Chart",
+            backgroundColor: Colors.lightBlueAccent,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.list_alt),
+            label: "Records",
+            backgroundColor: Colors.lightBlueAccent,
+          ),
+        ],
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 
-  Container resultContainer(String country, int index) {
+  Search() {
+    return Center(
+        child: Padding(
+      padding: EdgeInsets.all(10.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Card(
+            child: TextField(
+                controller: textEditingController,
+                decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    contentPadding: EdgeInsets.only(left: 75),
+                    suffixIcon: Icon(Icons.search_outlined),
+                    hintText: " Enter your search ")),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          MaterialButton(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+              color: Colors.greenAccent.shade400,
+              child: Container(
+                width: 75,
+                height: 30,
+                alignment: Alignment.center,
+                child: Text(
+                  "Search",
+                  style: GoogleFonts.lexend(
+                      textStyle: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 17.5,
+                          color: Colors.white)),
+                ),
+              ),
+              onPressed: () {
+                String searchValue = textEditingController.text;
+                if ((textEditingController.text.isNotEmpty)) {
+                  searchValue = searchValue.replaceAll(" ", "+");
+                  Api("in").callAPI(searchValue);
+                  setState(() {
+                    currentIndex = 1;
+                  });
+                }
+                // australia.callAPI(searchValue);
+                // usa.callAPI(searchValue);
+                // uk.callAPI(searchValue);
+                // japan.callAPI(searchValue);
+              })
+        ],
+      ),
+    ));
+  }
+
+  resultContainer(String country, Api gl, int index) {
     return Container(
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -153,9 +164,9 @@ class _MyHomePageState extends State<MyHomePage> {
                         letterSpacing: 1,
                         fontWeight: FontWeight.w900),
                   )),
-              containerContent(index, 0),
-              containerContent(index, 1),
-              containerContent(index, 2),
+              containerContent(gl, 0),
+              containerContent(gl, 1),
+              containerContent(gl, 2),
             ],
           ),
         ),
@@ -163,25 +174,9 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Container containerContent(int index, int i) {
+  Container containerContent(Api gl, int i) {
     Map responseMessage = {};
-    switch (index + 1) {
-      case 1:
-        responseMessage = responseMessageIN;
-        break;
-      case 2:
-        responseMessage = responseMessageAU;
-        break;
-      case 3:
-        responseMessage = responseMessageUS;
-        break;
-      case 4:
-        responseMessage = responseMessageUK;
-        break;
-      case 5:
-        responseMessage = responseMessageJP;
-        break;
-    }
+
     return Container(
       alignment: Alignment.center,
       height: 50,
