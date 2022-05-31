@@ -94,9 +94,8 @@ class _ChartState extends State<Chart> {
                   rightTitles:
                       AxisTitles(sideTitles: SideTitles(showTitles: false)),
                   bottomTitles: AxisTitles(
-                      sideTitles: SideTitles(
-                        showTitles: true,
-                      ),
+                      sideTitles:
+                          SideTitles(showTitles: true, reservedSize: 40),
                       axisNameWidget: Text(
                         object.Domain.toUpperCase(),
                         style: GoogleFonts.lexend(
