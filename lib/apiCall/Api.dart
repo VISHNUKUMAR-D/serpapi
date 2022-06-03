@@ -12,15 +12,15 @@ class Api {
   Future callAPI(searchString) async {
     try {
       http.Response response;
-      response = await http.get(Uri.parse(FlutterConfig.get("SERP_URL") +
+      response = await http.get(Uri.parse("https://serpapi.com/search.json?" +
           "q=" +
           searchString +
           "&" +
-          FlutterConfig.get("SERP_DOMAIN") +
+          "google_domain=google.com" +
           "&gl=" +
           country +
           "&hl=en&api_key=" +
-          FlutterConfig.get("SERPAPI_KEY")));
+          "a1d474e2bc26f3e412e626d0b206e5942d704bedd9790ccc2f9253325676f9a9"));
       if (response.statusCode == 200) {
         FireStore fs = FireStore(
             mapData: json.decode(response.body) as Map,

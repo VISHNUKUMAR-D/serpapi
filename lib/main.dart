@@ -11,8 +11,8 @@ import 'chart/Chart.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
   await FlutterConfig.loadEnvVariables();
+  await Firebase.initializeApp();
 
   runApp(MyApp());
 }

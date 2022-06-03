@@ -118,13 +118,18 @@ class _ResultState extends State<Result> {
         const SizedBox(
           width: 20,
         ),
-        Text(data,
-            style: GoogleFonts.lexend(
-                textStyle: const TextStyle(
-              fontSize: 12.5,
-              decoration: TextDecoration.underline,
-              color: Colors.blue,
-            ))),
+        Expanded(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Text(data,
+                style: GoogleFonts.lexend(
+                    textStyle: const TextStyle(
+                  fontSize: 12.5,
+                  decoration: TextDecoration.underline,
+                  color: Colors.blue,
+                ))),
+          ),
+        )
       ],
     );
   }
